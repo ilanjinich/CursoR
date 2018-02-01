@@ -104,10 +104,44 @@ lines(density(x),col="red",lwd=2)
 
 ```
 
+##Modelos lineales
+```{r}
+set.seed(140695)
+x<-1:10+rnorm(10) 
+y<-1:10
+plot(x,y) #vemos la tendencia.
+
+a<-lm(y~x) #modelo 
+a
+summary(a) #resumen del modelo
+anova(a)
+plot(a)
+
+
+```
+```{r}
+set.seed(140695)
+n<-10^4
+#modelo mas complicado
+
+
+#el ajuste es muy similar
+a<-lm(Ozone~I(Solar.R^2)+Wind,data=airquality)
+b<-lm(Ozone~0+Temp,data=airquality)
+
+summary(a)
+summary(b)
+
+```
+
+
 Tarea: 
 1. Usar lo que llevamos aprendido para hacer una tabla de la normal. (ejemplo: http://3.bp.blogspot.com/-UZHMmDllr7U/U46XYBsLOcI/AAAAAAAAAHQ/MDV5Zwigh4U/s1600/tabla2.jpg)
+
 2. Leer el paper (http://www.stat.wvu.edu/~jharner/courses/stat623/docs/tidy-dataJSS.pdf)
+
 3. Investigar que tipos de gráficas existen (boxplot, sparse,... )
+
 4. Jugar con el data frame iris
 ```{r}
 head(iris)
