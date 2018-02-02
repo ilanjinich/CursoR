@@ -1,0 +1,26 @@
+---
+title: "Solución de la tarea"
+author: "Ilan Jinich"
+date: "2 de febrero de 2018"
+output: html_document
+---
+```{r,echo=FALSE}
+col<-(0:4)*.02
+row<-0:29*.1
+tabla<-matrix(nrow=length(row),ncol=length(col))
+colnames(tabla)<-col
+rownames(tabla)<-row
+
+for(i in seq_along(col)){
+  for(j in seq_along(row)){
+    tabla[j,i]<-pnorm(col[i]+row[j])
+    
+  }
+  
+  
+}
+
+print(as.data.frame(tabla))
+
+```
+
