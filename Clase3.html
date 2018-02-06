@@ -120,7 +120,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Clase3</h1>
 <h4 class="author"><em>Ilan Jinich</em></h4>
-<h4 class="date"><em>5 de febrero de 2018</em></h4>
+<h4 class="date"><em>3</em></h4>
 
 </div>
 
@@ -133,6 +133,7 @@ library('tidyr')
 library('dplyr')</code></pre>
 <div id="lubridate" class="section level2">
 <h2>Lubridate</h2>
+<p><a href="https://www.r-statistics.com/2012/03/do-more-with-dates-and-times-in-r-with-lubridate-1-1-0/" class="uri">https://www.r-statistics.com/2012/03/do-more-with-dates-and-times-in-r-with-lubridate-1-1-0/</a></p>
 <pre class="r"><code>ymd(&quot;20110604&quot;); mdy(&quot;06-04-2011&quot;); dmy(&quot;04/06/2011&quot;)</code></pre>
 <pre><code>## [1] &quot;2011-06-04&quot;</code></pre>
 <pre><code>## [1] &quot;2011-06-04&quot;</code></pre>
@@ -453,6 +454,114 @@ mammals &lt;- dplyr::tbl_df(mammals) # for prettier printing</code></pre>
 ## 4      Cetacea 7.373065e+06
 ## 5   Chiroptera 5.772033e+01
 ## 6    Cingulata 4.699230e+03</code></pre>
+</div>
+<div id="tidyr" class="section level2">
+<h2>Tidyr</h2>
+<p><a href="https://datascienceplus.com/data-manipulation-with-tidyr/" class="uri">https://datascienceplus.com/data-manipulation-with-tidyr/</a> gather</p>
+<pre class="r"><code>glimpse(mtcars)</code></pre>
+<pre><code>## Observations: 32
+## Variables: 11
+## $ mpg  &lt;dbl&gt; 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19....
+## $ cyl  &lt;dbl&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4, ...
+## $ disp &lt;dbl&gt; 160.0, 160.0, 108.0, 258.0, 360.0, 225.0, 360.0, 146.7, 1...
+## $ hp   &lt;dbl&gt; 110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180, ...
+## $ drat &lt;dbl&gt; 3.90, 3.90, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3.9...
+## $ wt   &lt;dbl&gt; 2.620, 2.875, 2.320, 3.215, 3.440, 3.460, 3.570, 3.190, 3...
+## $ qsec &lt;dbl&gt; 16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20.00, 2...
+## $ vs   &lt;dbl&gt; 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, ...
+## $ am   &lt;dbl&gt; 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, ...
+## $ gear &lt;dbl&gt; 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, ...
+## $ carb &lt;dbl&gt; 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, ...</code></pre>
+<pre class="r"><code>mtcars$car &lt;- rownames(mtcars)
+mtcars &lt;- mtcars[, c(12, 1:11)] #le agregamos nombre a la primera variable
+mtcarsNew &lt;-gather(mtcars,attribute, value, -car)
+glimpse(mtcarsNew)</code></pre>
+<pre><code>## Observations: 352
+## Variables: 3
+## $ car       &lt;chr&gt; &quot;Mazda RX4&quot;, &quot;Mazda RX4 Wag&quot;, &quot;Datsun 710&quot;, &quot;Hornet ...
+## $ attribute &lt;chr&gt; &quot;mpg&quot;, &quot;mpg&quot;, &quot;mpg&quot;, &quot;mpg&quot;, &quot;mpg&quot;, &quot;mpg&quot;, &quot;mpg&quot;, &quot;mp...
+## $ value     &lt;dbl&gt; 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8...</code></pre>
+<p>Spread</p>
+<pre class="r"><code>mtcarsSpread &lt;- spread(mtcarsNew,attribute, value)
+glimpse(mtcarsSpread)</code></pre>
+<pre><code>## Observations: 32
+## Variables: 12
+## $ car  &lt;chr&gt; &quot;AMC Javelin&quot;, &quot;Cadillac Fleetwood&quot;, &quot;Camaro Z28&quot;, &quot;Chrys...
+## $ am   &lt;dbl&gt; 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, ...
+## $ carb &lt;dbl&gt; 2, 4, 4, 4, 1, 2, 4, 6, 1, 1, 4, 2, 1, 2, 4, 2, 8, 4, 4, ...
+## $ cyl  &lt;dbl&gt; 8, 8, 8, 8, 4, 8, 8, 6, 4, 4, 8, 4, 6, 8, 8, 4, 8, 6, 6, ...
+## $ disp &lt;dbl&gt; 304.0, 472.0, 350.0, 440.0, 108.0, 318.0, 360.0, 145.0, 7...
+## $ drat &lt;dbl&gt; 3.15, 2.93, 3.73, 3.23, 3.85, 2.76, 3.21, 3.62, 4.08, 4.0...
+## $ gear &lt;dbl&gt; 3, 3, 3, 3, 4, 3, 3, 5, 4, 4, 5, 4, 3, 3, 3, 5, 5, 4, 4, ...
+## $ hp   &lt;dbl&gt; 150, 205, 245, 230, 93, 150, 245, 175, 66, 66, 264, 52, 1...
+## $ mpg  &lt;dbl&gt; 15.2, 10.4, 13.3, 14.7, 22.8, 15.5, 14.3, 19.7, 32.4, 27....
+## $ qsec &lt;dbl&gt; 17.30, 17.98, 15.41, 17.42, 18.61, 16.87, 15.84, 15.50, 1...
+## $ vs   &lt;dbl&gt; 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, ...
+## $ wt   &lt;dbl&gt; 3.435, 5.250, 3.840, 5.345, 2.320, 3.520, 3.570, 2.770, 2...</code></pre>
+<p>Unite</p>
+<pre class="r"><code>set.seed(1)
+date &lt;- as.Date('2016-01-01') + 0:14
+hour &lt;- sample(1:24, 15)
+min &lt;- sample(1:60, 15)
+second &lt;- sample(1:60, 15)
+event &lt;- sample(letters, 15)
+data &lt;- data.frame(date, hour, min, second, event)
+data #creamos datos para jugar</code></pre>
+<pre><code>##          date hour min second event
+## 1  2016-01-01    7  30     29     u
+## 2  2016-01-02    9  43     36     a
+## 3  2016-01-03   13  58     60     l
+## 4  2016-01-04   20  22     11     q
+## 5  2016-01-05    5  44     47     p
+## 6  2016-01-06   18  52     37     k
+## 7  2016-01-07   19  12     43     r
+## 8  2016-01-08   12  35      6     i
+## 9  2016-01-09   11   7     38     e
+## 10 2016-01-10    1  14     21     b
+## 11 2016-01-11    3  20     42     w
+## 12 2016-01-12   14   1     32     t
+## 13 2016-01-13   23  19     52     h
+## 14 2016-01-14   21  41     26     s
+## 15 2016-01-15    8  16     25     o</code></pre>
+<pre class="r"><code>dataNew &lt;- unite(data, datehour, date, hour, sep = ' ') 
+dataNew&lt;- unite(dataNew, datetime, datehour, min, second, sep = ':')
+dataNew</code></pre>
+<pre><code>##               datetime event
+## 1   2016-01-01 7:30:29     u
+## 2   2016-01-02 9:43:36     a
+## 3  2016-01-03 13:58:60     l
+## 4  2016-01-04 20:22:11     q
+## 5   2016-01-05 5:44:47     p
+## 6  2016-01-06 18:52:37     k
+## 7  2016-01-07 19:12:43     r
+## 8   2016-01-08 12:35:6     i
+## 9   2016-01-09 11:7:38     e
+## 10  2016-01-10 1:14:21     b
+## 11  2016-01-11 3:20:42     w
+## 12  2016-01-12 14:1:32     t
+## 13 2016-01-13 23:19:52     h
+## 14 2016-01-14 21:41:26     s
+## 15  2016-01-15 8:16:25     o</code></pre>
+<p>Separate</p>
+<pre class="r"><code>data1 &lt;-  separate(dataNew, datetime, c('date', 'time'), sep = ' ') 
+data1 &lt;- separate(data1, time, c('hour', 'min', 'second'), sep = ':')
+data1</code></pre>
+<pre><code>##          date hour min second event
+## 1  2016-01-01    7  30     29     u
+## 2  2016-01-02    9  43     36     a
+## 3  2016-01-03   13  58     60     l
+## 4  2016-01-04   20  22     11     q
+## 5  2016-01-05    5  44     47     p
+## 6  2016-01-06   18  52     37     k
+## 7  2016-01-07   19  12     43     r
+## 8  2016-01-08   12  35      6     i
+## 9  2016-01-09   11   7     38     e
+## 10 2016-01-10    1  14     21     b
+## 11 2016-01-11    3  20     42     w
+## 12 2016-01-12   14   1     32     t
+## 13 2016-01-13   23  19     52     h
+## 14 2016-01-14   21  41     26     s
+## 15 2016-01-15    8  16     25     o</code></pre>
 <p>En la sesión 5 veremos pipes y como hacer esto todavia más fácil</p>
 </div>
 
