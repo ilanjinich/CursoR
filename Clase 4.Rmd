@@ -131,4 +131,73 @@ print(g)
 ```
 
 ##C
+##1
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_jitter() +
+  facet_wrap(~ cyl)
+```
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_jitter() +
+  facet_grid(.~ class)
+```
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_jitter() +
+  facet_grid(drv ~ class)
+```
+
+##2
+```{r}
+data(airquality)
+ggplot(airquality, aes(x = Solar.R, y = Ozone)) + 
+  geom_point() 
+```
+
+```{r}
+#install.packages('Hmisc')
+library(Hmisc) #Vamos a ver despues que es esto
+airquality$Wind.cat <- cut2(airquality$Wind, g = 3) 
+
+ggplot(airquality, aes(x = Solar.R, y = Ozone)) + 
+  geom_point() +
+  facet_wrap(~ Wind.cat)
+```
+
+```{r}
+ggplot(airquality, aes(x = Solar.R, y = Ozone)) + 
+  geom_point() +
+  facet_wrap(~ Wind.cat) + 
+  geom_smooth(span = 3)
+```
+
+##3
+Pronto veremos Readr, ahorita solo lo vamos a usar para leer un csv. Los datos estan en el github.
+```{r}
+#install.packages('readr')
+library('readr')
+bnames <- read_csv('bnames.csv')
+head(bnames)
+library('dplyr')
+```
+```{r}
+bnames_John <- 
+  filter(bnames, name == "John")
+ggplot(bnames_John, aes(x = year, y = percent)) +
+  geom_point()
+```
+
+```{r}
+ggplot(bnames_John, aes(x = year, y = percent, color = sex)) +
+  geom_line()
+```
+
+##Ejercicio en clase
+Juegen con msleep y hagan varias gráficas, traten de ver que encuentran.
+```{r}
+head(msleep)
+```
 
