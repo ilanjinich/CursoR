@@ -1,0 +1,62 @@
+---
+title: "Clase 4"
+author: "Ilan Jinich"
+date: "8 de febrero de 2018"
+output: html_document
+---
+Las notas estan basadas en las de Andreu Boada de Atela (Enero 26, 2016).
+```{r,eval=FALSE}
+install.packages('ggplot2')
+```
+
+
+```{r}
+library(ggplot2)
+```
+
+
+
+```{r}
+#Base de datos que vamos a usar
+head(mpg) 
+str(mpg)
+```
+
+##Diagrama de Dispersión
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point()
+```
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point()
+```
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy, size = drv,color=class)) + 
+  geom_point()
+```
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy, color = class, shape=fl,size=drv)) + 
+  geom_point()
+```
+
+```{r}
+p <- ggplot(mpg, aes(x = displ, y = hwy))
+p + geom_line()
+```
+
+##Jitter 
+```{r}
+p <- ggplot(mpg, aes(x = cty, y = hwy))
+p + geom_point()
+```
+
+
+```{r}
+p + geom_jitter() 
+```
+
