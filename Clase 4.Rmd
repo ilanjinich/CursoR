@@ -14,7 +14,7 @@ install.packages('ggplot2')
 library(ggplot2)
 ```
 
-
+##A
 
 ```{r}
 #Base de datos que vamos a usar
@@ -22,7 +22,7 @@ head(mpg)
 str(mpg)
 ```
 
-##Diagrama de Dispersión
+##1
 
 ```{r}
 ggplot(mpg, aes(x = displ, y = hwy)) + 
@@ -43,13 +43,17 @@ ggplot(mpg, aes(x = displ, y = hwy, size = drv,color=class)) +
 ggplot(mpg, aes(x = displ, y = hwy, color = class, shape=fl,size=drv)) + 
   geom_point()
 ```
-
+##2
 ```{r}
 p <- ggplot(mpg, aes(x = displ, y = hwy))
 p + geom_line()
 ```
 
-##Jitter 
+
+
+
+
+##3
 ```{r}
 p <- ggplot(mpg, aes(x = cty, y = hwy))
 p + geom_point()
@@ -59,4 +63,72 @@ p + geom_point()
 ```{r}
 p + geom_jitter() 
 ```
+
+##4
+```{r}
+ggplot(mpg, aes(x = reorder(class, hwy), y = hwy)) + 
+    geom_point()
+```
+
+```{r}
+ggplot(mpg, aes(x = reorder(class, hwy), y = hwy)) + 
+    geom_jitter() 
+```
+
+```{r}
+ggplot(mpg, aes(x = reorder(class, hwy), y = hwy)) + 
+    geom_boxplot() 
+```
+
+```{r}
+ggplot(mpg, aes(x = reorder(class, hwy), y = hwy)) + 
+    geom_jitter() +
+    geom_boxplot()
+```
+
+```{r}
+ggplot(mpg, aes(x = reorder(class, hwy,median), y = hwy)) + 
+    geom_jitter() +
+    geom_boxplot()
+```
+
+##B
+http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html
+
+```{r,cache=TRUE}
+midwest <- read.csv("http://goo.gl/G1K41K")
+class(midwest)
+library(dplyr)
+glimpse(midwest)
+```
+##1
+```{r}
+ggplot(midwest, aes(x=area, y=poptotal)) + geom_point()
+
+```
+
+```{r}
+g <- ggplot(midwest, aes(x=area, y=poptotal)) + geom_point() + geom_smooth(method="lm",se=FALSE)
+plot(g)
+```
+```{r}
+g + xlim(0, 0.1) + ylim(0, 1000000)
+```
+
+```{r}
+g <- ggplot(midwest, aes(x=area, y=poptotal)) + geom_point() + geom_smooth(method="lm")
+g1 <- g + coord_cartesian(xlim=c(0,0.1), ylim=c(0, 1000000))
+g1<-g1 + labs(title="Area Vs Population", subtitle="From midwest dataset", y="Population", x="Area", caption="Midwest Demographics")
+
+print(g1)
+                      
+                          
+```
+
+```{r}
+g <- ggplot(midwest, aes(x=area, y=poptotal,col=as.factor(inmetro))) + geom_point() + scale_colour_brewer(palette = "Set1")
+print(g)
+```
+
+##C
 
