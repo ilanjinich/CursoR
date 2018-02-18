@@ -177,4 +177,20 @@ x <- "This is a sentence."
 str_split(x, boundary("word"))
 str_split(x, "")
 ```
+#Gracias
+
+```{r,echo=FALSE}
+set.seed(140695)
+n<-10^5
+a<-NULL
+a[1]<-0
+for(i in seq(n)){
+  a[i+1]=a[i]+rnorm(1,sd=sqrt(i))
+  
+}
+plot(a,type='l')
+```
+
+
+
 
