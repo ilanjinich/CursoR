@@ -1,0 +1,142 @@
+---
+title: "Clase5"
+author: "Ilan Jinich"
+date: "11 de febrero de 2018"
+output: html_document
+---
+
+##Ggplot2
+http://ggplot2.tidyverse.org/reference/geom_histogram.html
+```{r}
+library('ggplot2')
+head(diamonds)
+```
+##1
+```{r}
+ggplot(diamonds, aes(carat)) +
+  geom_histogram()
+```
+
+```{r}
+ggplot(diamonds, aes(carat)) +
+  geom_histogram(binwidth = 0.01)
+```
+
+```{r}
+ggplot(diamonds, aes(carat)) +
+  geom_histogram(bins = 200)
+```
+
+```{r}
+ggplot(diamonds, aes(price, fill = cut)) +
+  geom_histogram(binwidth = 500)
+```
+```{r}
+ggplot(diamonds, aes(price, colour = cut)) +
+  geom_freqpoly(binwidth = 500)
+```
+
+##2
+```{r}
+head(mtcars)
+```
+
+```{r}
+p <- ggplot(mtcars, aes(wt, mpg, label = rownames(mtcars)))
+p + geom_text()
+
+p + geom_text(check_overlap = TRUE)
+
+p + geom_text(aes(colour = factor(cyl)),check_overlap = TRUE)
+```
+##3
+```{r}
+ggplot(diamonds, aes(carat)) +
+  geom_density()
+
+ggplot(diamonds, aes(carat)) +
+  geom_density(adjust = 1/5)
+
+ggplot(diamonds, aes(depth, colour = cut)) +
+  geom_density() +
+  xlim(55, 70)
+
+
+```
+
+##4 (cosas raras)
+```{r}
+set.seed('140695')
+df <- data.frame(
+  x = c(rnorm(100, 0, 3), rnorm(100, 0, 10)),
+  g = gl(2, 100)
+)
+
+
+ggplot(df, aes(x)) + stat_ecdf(geom = "step")
+
+ggplot(faithful, aes(waiting, eruptions)) +
+  geom_point() +
+  stat_ellipse()
+
+ggplot(faithful, aes(waiting, eruptions, color = eruptions > 3)) +
+  geom_point() +
+  stat_ellipse()
+
+ggplot(data.frame(x = c(-5, 5)), aes(x)) + stat_function(fun = dnorm)
+
+g <- ggplot(mpg, aes(class))
+g + geom_bar()
+
+g +
+ geom_bar(aes(fill = drv), position = position_stack(reverse = TRUE)) +
+ coord_flip() +
+ theme(legend.position = "top")
+```
+
+
+##Pipes
+El objetivo de esta parte no es que sepan usarlas, es que lo entiendan.
+
+```{r}
+#install.packages('magrittr')
+library('magrittr')
+ #vignette("magrittr")
+```
+##%>%
+```{r}
+x<-1
+log(x)
+x %>% log
+```
+
+##%$%
+```{r}
+iris %>%
+  subset(Sepal.Length > mean(Sepal.Length)) %$%
+  cor(Sepal.Length, Sepal.Width)
+
+
+data.frame(z = rnorm(100)) %$%
+  ts.plot(z)
+```
+
+
+##%<>%
+```{r}
+x <- rnorm(10)
+x
+x %<>% abs %>% sort
+x
+
+```
+
+
+```{r}
+
+iris$Sepal.Length %<>% sqrt
+iris$Sepal.Length <- 
+  iris$Sepal.Length %>%
+  sqrt()
+```
+

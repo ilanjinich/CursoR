@@ -1,0 +1,204 @@
+---
+title: "Clase 6"
+author: "Ilan Jinich"
+date: "17 de febrero de 2018"
+output: html_document
+---
+##Strings
+
+Sacado de: CRUR EA1
+
+https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html
+
+```{r,cache=TRUE}
+archivo <- "http://socserv.socsci.mcmaster.ca/jfox/books/Companion/data/Hamlet.txt"
+Hamlet <- readLines(archivo)
+```
+
+```{r}
+head(Hamlet, 5)
+```
+
+```{r}
+str(Hamlet) #Num de lineas
+sum(nchar(Hamlet)) #Num de caracteres
+```
+```{r}
+lineas.indices.and <- grep("and", Hamlet) #Obtenemos las lines que tienen "and"
+Hamlet[lineas.indices.and]
+```
+
+```{r}
+lineas.indices.ex <- grep("!", Hamlet)
+ Hamlet[lineas.indices.ex] #lineas que tienen !
+```
+
+```{r}
+ lineas.indices.ini.for <- grep("^For", Hamlet)
+ Hamlet[lineas.indices.ini.for] #Lineas que empiezan con for
+```
+
+```{r}
+lineas.indices.fin.ecoma <- grep("e,$", Hamlet)
+Hamlet[lineas.indices.fin.ecoma] #Lineas que acaban con "e,"
+```
+
+```{r}
+lineas.indices.with.min.may.1 <- grep("[Ww]ith", Hamlet)
+Hamlet[lineas.indices.with.min.may.1] #lineas con with o With
+lineas.indices.with.min.may.2 <- grep("with", Hamlet, ignore.case = TRUE)
+Hamlet[lineas.indices.with.min.may.2] #lo mismo
+
+grep("[Ww]ith", Hamlet, value = TRUE) # Es posible obtener los datos directamente. 
+```
+```{r}
+todas.lineas <- paste(Hamlet, collapse = " ")
+palabras <- strsplit(todas.lineas, " ")
+class(palabras)
+palabras <- unlist(palabras)
+class(palabras)
+head(grep("[a-e]", palabras, value = TRUE), 20)
+```
+
+```{r}
+indices <- grep("(Nymph|with)|traveler", Hamlet, ignore.case = TRUE)
+Hamlet[indices]
+(sin.w <- grep("^[^W]", Hamlet[indices], value = TRUE))
+```
+
+```{r}
+grep("a.d", palabras, value = TRUE)
+grep("a?ed", palabras,value = TRUE)
+head(grep("to+", Hamlet, value = TRUE), 3)
+head(grep("^(The).*a+", Hamlet, value = TRUE),3)
+```
+
+##Stringr
+```{r,eval=FALSE}
+install.packages('stringr')
+```
+
+```{r}
+library('stringr')
+```
+
+
+```{r}
+str_length("abc")
+x <- c("abcdef", "ghifjk")
+
+# The 3rd letter
+str_sub(x, 3, 3)
+
+# The 2nd to 2nd-to-last character
+str_sub(x, 2, -2)
+
+str_sub(x, 3, 3) <- "X"
+x
+
+str_dup(x, c(2, 3))
+```
+
+```{r}
+x <- c("abc", "defghi")
+str_pad(x, 10)
+
+str_pad(x, 10, "both")
+str_pad(x, 4)
+
+x <- c("Short", "This is a long string")
+x %>% 
+  str_trunc(10) %>% 
+  str_pad(10, "right")
+
+str_pad(str_trunc(x,10),10,"right")
+
+
+x <- c("  a   ", "b   ",  "   c")
+str_trim(x)
+str_trim(x, "left")
+
+jabberwocky <- str_c(
+  "`Twas brillig, and the slithy toves ",
+  "did gyre and gimble in the wabe: ",
+  "All mimsy were the borogoves, ",
+  "and the mome raths outgrabe. "
+)
+
+cat(str_wrap(jabberwocky, width = 40))
+```
+
+```{r}
+x <- "I like horses."
+str_to_upper(x)
+str_to_title(x)
+str_to_lower(x)
+
+x <- c("y", "i", "k")
+str_order(x)
+str_sort(x)
+```
+
+```{r}
+strings <- c(
+  "apple", 
+  "219 733 8965", 
+  "329-293-8753", 
+  "Work: 579-499-7527; Home: 543.355.3679"
+)
+phone <- "([2-9][0-9]{2})[- .]([0-9]{3})[- .]([0-9]{4})"
+str_detect(strings, phone)
+str_subset(strings, phone)
+str_count(strings, phone)
+
+(loc <- str_locate(strings, phone))
+str_locate_all(strings, phone)
+
+# What are the phone numbers?
+str_extract(strings, phone)
+
+
+str_extract_all(strings, phone, simplify = TRUE)
+
+str_match(strings, phone)
+str_match_all(strings, phone)
+```
+
+```{r}
+str_replace(strings, phone, "XXX-XXX-XXXX")
+str_replace_all(strings, phone, "XXX-XXX-XXXX")
+```
+
+
+```{r}
+str_split("a-b-c", "-")
+str_split_fixed("a-b-c", "-", n = 2)
+x <- "This is a sentence."
+str_split(x, boundary("word"))
+str_split(x, "")
+```
+#Gracias
+
+```{r,echo=FALSE,messages=FALSE,warning=FALSE,comment=FALSE}
+set.seed(140695)
+n<-10^4
+a<-NULL
+a[1]<-0
+for(i in seq(n)){
+  a[i+1]=a[i]+rnorm(1,sd=sqrt(i))
+  
+}
+plot(a,type='l')
+
+library(ggplot2)
+library(datasauRus)
+ggplot(datasaurus_dozen[which(datasaurus_dozen$dataset=='dino'),], aes(x=x, y=y, colour=dataset))+
+  geom_point()+
+  theme_void()+
+  theme(legend.position = "none")+
+  facet_wrap(~dataset, ncol=3)
+```
+
+
+
+

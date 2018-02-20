@@ -1,0 +1,167 @@
+---
+title: "Clase3"
+author: "Ilan Jinich"
+date: "3"
+output: html_document
+---
+
+```{r,eval=FALSE}
+install.packages('lubridate')
+install.packages('tidyr')
+install.packages('dplyr')
+```
+
+```{r,warning=FALSE,message=FALSE}
+library('lubridate')
+library('tidyr')
+library('dplyr')
+```
+
+
+##Lubridate
+https://www.r-statistics.com/2012/03/do-more-with-dates-and-times-in-r-with-lubridate-1-1-0/
+```{r}
+ymd("20110604"); mdy("06-04-2011"); dmy("04/06/2011")
+
+
+
+arrive <- ymd_hms("2011-06-04 12:00:00", tz = "Pacific/Auckland")
+leave <- ymd_hms("2011-08-10 14:00:00", tz = "Pacific/Auckland") #Ojo: time zone
+leave-arrive 
+
+second(arrive)
+second(arrive)<-25
+arrive
+wday(arrive)
+wday(arrive,label=TRUE) #Dia de la semana
+
+auckland <- arrive %--% leave
+jsm <- interval(ymd(20110720, tz = "Pacific/Auckland"), ymd(20110831, tz = "Pacific/Auckland"))
+
+int_overlaps(jsm, auckland) ##Los intervalos se intersectan. 
+
+#Aritmerica
+ymd(20110101) + dyears(1)
+ymd(20110101) + dyears(1)
+
+leap_year(2012)
+ymd(20120101) + dyears(1)
+ymd(20120101) + years(1)
+
+meeting <- ymd_hms("2011-07-01 09:00:00", tz = "Pacific/Auckland")
+meetings <- meeting + weeks(0:5) #Sumas en for
+meetings %within% jsm
+
+```
+##Dplyr
+http://seananderson.ca/2014/09/13/dplyr-intro.html
+```{r,cache=TRUE}
+#Ignoren esto, es solo para tener una base de datos
+pantheria <-
+  "http://esapubs.org/archive/ecol/E090/184/PanTHERIA_1-0_WR05_Aug2008.txt"
+download.file(pantheria, destfile = "mammals.txt")
+
+mammals <- read.table("mammals.txt", sep = "\t", header = TRUE, 
+  stringsAsFactors = FALSE)
+names(mammals) <- sub("X[0-9._]+", "", names(mammals))
+names(mammals) <- sub("MSW05_", "", names(mammals))
+mammals <- dplyr::select(mammals, Order, Binomial, AdultBodyMass_g, 
+  AdultHeadBodyLen_mm, HomeRange_km2, LitterSize)
+names(mammals) <- gsub("([A-Z])", "_\\L\\1", names(mammals), perl = TRUE)
+names(mammals) <- gsub("^_", "", names(mammals), perl = TRUE)
+mammals[mammals == -999] <- NA
+names(mammals)[names(mammals) == "binomial"] <- "species"
+mammals <- dplyr::tbl_df(mammals) # for prettier printing
+```
+
+```{r}
+head(mammals) #Vamos a trabajar con estos datos.
+
+glimpse(mammals)
+
+```
+
+Select
+```{r}
+select(mammals, adult_head_body_len_mm)
+select(mammals, species, litter_size)
+select(mammals, adult_head_body_len_mm:litter_size)
+select(mammals, -litter_size)
+select(mammals, contains("body"))
+select(mammals, starts_with("adult"))
+select(mammals, ends_with("g"))
+select(mammals, 1:3)
+
+```
+
+Filter
+
+```{r}
+filter(mammals, adult_body_mass_g > 1e7)[ , 1]
+
+filter(mammals, species == "Balaena mysticetus")
+filter(mammals, order == "Carnivora" & adult_body_mass_g < 200)
+
+```
+Arrange
+```{r}
+arrange(mammals, adult_body_mass_g)[ , 3]
+arrange(mammals, desc(adult_body_mass_g))[ , 3]
+arrange(mammals, order, adult_body_mass_g)[ , 1:3]
+
+```
+Mutate
+```{r}
+glimpse(mutate(mammals, adult_body_mass_kg = adult_body_mass_g / 1000))
+glimpse(mutate(mammals, 
+    g_per_mm = adult_body_mass_g / adult_head_body_len_mm,
+    kg_per_mm = g_per_mm / 1000))
+```
+Summarise
+```{r}
+summarise(mammals, mean_mass = mean(adult_body_mass_g, na.rm = TRUE))
+head(summarise(group_by(mammals, order),
+  mean_mass = mean(adult_body_mass_g, na.rm = TRUE)))
+```
+##Tidyr
+https://datascienceplus.com/data-manipulation-with-tidyr/
+gather
+```{r}
+glimpse(mtcars)
+
+mtcars$car <- rownames(mtcars)
+mtcars <- mtcars[, c(12, 1:11)] #le agregamos nombre a la primera variable
+mtcarsNew <-gather(mtcars,attribute, value, -car)
+glimpse(mtcarsNew)
+```
+Spread
+```{r}
+mtcarsSpread <- spread(mtcarsNew,attribute, value)
+glimpse(mtcarsSpread)
+```
+Unite
+```{r}
+set.seed(1)
+date <- as.Date('2016-01-01') + 0:14
+hour <- sample(1:24, 15)
+min <- sample(1:60, 15)
+second <- sample(1:60, 15)
+event <- sample(letters, 15)
+data <- data.frame(date, hour, min, second, event)
+data #creamos datos para jugar
+
+dataNew <- unite(data, datehour, date, hour, sep = ' ') 
+dataNew<- unite(dataNew, datetime, datehour, min, second, sep = ':')
+dataNew
+
+```
+Separate
+```{r}
+data1 <-  separate(dataNew, datetime, c('date', 'time'), sep = ' ') 
+data1 <- separate(data1, time, c('hour', 'min', 'second'), sep = ':')
+data1
+```
+
+
+En la sesión 5 veremos pipes y como hacer esto todavia más fácil 
+
