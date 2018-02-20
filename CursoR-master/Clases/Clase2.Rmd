@@ -1,0 +1,151 @@
+---
+title: "Clase 2"
+author: "Ilan Jinich"
+date: "31 de enero de 2018"
+output: html_document
+---
+
+##Funciones
+
+```{r}
+sumas.2.num<-function(A,B){
+  return (A+B)
+}
+
+sumas.2.num(1,7) #sumamos 1+7
+class(sumas.2.num) # Le pedimos la clase del objeto
+formals(sumas.2.num) # Cuales son los argumentos de la funcion
+body(sumas.2.num) #cual es el cuerpo  de la funcion
+```
+
+```{r}
+
+vec.esc<-function (vector, escalar=1){
+  
+  potencia<-function(escalar){
+    escalar^2
+  }
+  
+  potencia(escalar)*vector
+}
+
+vec.esc(c(1,2,1))
+
+vec.esc(c(1,1,1),2)
+
+vec.esc(esca=3,vec=1:10)
+
+```
+
+##Fechas
+```{r}
+a<-as.Date("2017-06-14") #definimos fecha
+class(a) #de que clase es el objeto
+a #imprime objeto
+a+-2:2 #se vale sumar y restar fechas
+```
+
+##Eliminación de faltantes
+
+```{r}
+x <- c(45, pi, NA, c(10, NA), -35, NA) #agregamos valores faltantes en el vector
+x[3]
+
+is.na(x)
+a<-x[!is.na(x)]
+
+print(a)
+
+```
+##Directorio de trabajo
+
+```{r}
+getwd()
+```
+
+
+##Lectura y escritura de archivos
+
+```{r}
+head(airquality)
+
+write.table(airquality[4:7, ], file = "archivo.csv", sep = ",", row.names = FALSE) #Escribe un csv a partir del data frame de airquality
+
+read.table("archivo.csv", sep = ",", header = TRUE, colClasses = "numeric") #lee la tabla que acabamos de crear
+
+```
+
+##Distribuciones
+(4 funciones importantes)
+```{r}
+#funcion d
+dnorm(0,mean=0,sd=1)
+
+plot(.01*-300:300,dnorm(.01*-300:300,mean=0,sd=1))
+
+#funcion p
+pnorm(0,mean=0,sd=1)
+plot(.01*-300:300,pnorm(.01*-300:300,mean=0,sd=1))
+
+#funcion q
+qnorm(.5,mean=0,sd=1)
+qnorm(.1,mean=0,sd=1)
+plot(.01*0:100,qnorm(.01*0:100,mean=0,sd=1))
+
+
+
+#funcion r
+x<-rnorm(10^4,mean=0,sd=1)
+hist(x,probability = T)
+lines(density(x),col="red",lwd=2)
+
+
+
+
+```
+
+##Modelos lineales
+```{r}
+set.seed(140695)
+x<-1:10+rnorm(10) 
+y<-1:10
+plot(x,y) #vemos la tendencia.
+
+a<-lm(y~x) #modelo 
+a
+summary(a) #resumen del modelo
+anova(a)
+plot(a)
+
+
+```
+```{r}
+set.seed(140695)
+n<-10^4
+#modelo mas complicado
+
+
+#el ajuste es muy similar
+a<-lm(Ozone~I(Solar.R^2)+Wind,data=airquality)
+b<-lm(Ozone~0+Temp,data=airquality)
+
+summary(a)
+summary(b)
+
+```
+
+
+Tarea: 
+1. Usar lo que llevamos aprendido para hacer una tabla de la normal. (ejemplo: http://3.bp.blogspot.com/-UZHMmDllr7U/U46XYBsLOcI/AAAAAAAAAHQ/MDV5Zwigh4U/s1600/tabla2.jpg)
+
+2. Leer el paper (http://www.stat.wvu.edu/~jharner/courses/stat623/docs/tidy-dataJSS.pdf)
+
+3. Investigar que tipos de gráficas existen (boxplot, sparse,... )
+
+4. Jugar con el data frame iris
+```{r}
+head(iris)
+summary(iris)
+dim(iris)
+```
+
