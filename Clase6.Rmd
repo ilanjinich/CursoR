@@ -179,9 +179,9 @@ str_split(x, "")
 ```
 #Gracias
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,messages=FALSE,warning=FALSE,comment=FALSE}
 set.seed(140695)
-n<-10^5
+n<-10^4
 a<-NULL
 a[1]<-0
 for(i in seq(n)){
@@ -189,6 +189,14 @@ for(i in seq(n)){
   
 }
 plot(a,type='l')
+
+library(ggplot2)
+library(datasauRus)
+ggplot(datasaurus_dozen[which(datasaurus_dozen$dataset=='dino'),], aes(x=x, y=y, colour=dataset))+
+  geom_point()+
+  theme_void()+
+  theme(legend.position = "none")+
+  facet_wrap(~dataset, ncol=3)
 ```
 
 
